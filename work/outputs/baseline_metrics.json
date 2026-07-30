@@ -1,0 +1,7 @@
+{
+  "baseline_rule": "impressions_90d * (stale + low_ctr)",
+  "queue_size": 9766,
+  "base_rate": 0.5421,
+  "precision_at_10": 0.6,
+  "precision_at_50": 0.42
+}
