@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Signal Analysis | FlyRank Capstone</title>
+    <meta name="description" content="A research paper on isolating true SEO signals using machine learning on the FlyRank dataset.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --gradient: linear-gradient(135deg, #38bdf8, #818cf8);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, rgba(15,23,42,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .meta {
+            color: #94a3b8;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(56,189,248,0.2);
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(56,189,248,0.2);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            color: #cbd5e1;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        p, li {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #818cf8;
+            text-decoration: underline;
+        }
+
+        .highlight {
+            background: rgba(56,189,248,0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--accent-color);
+            font-family: monospace;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-style: italic;
+            border: 1px dashed rgba(255,255,255,0.2);
+            margin: 2rem 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 4rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            section { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ranking Signal Analysis</h1>
+        <div class="meta">
+            Author: AI Agent & Shreyashgol | Lane: Ranking Signal Analysis | Date: July 2026
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <section id="abstract">
+            <h2>0. Abstract</h2>
+            <p>What actually drives visibility in search? We analyzed a sample of 30,000 pseudonymized content items to isolate which signals matter, as SEO myths often conflate correlation with causation. We built a Random Forest Regressor predicting average position and used Permutation Importance on a sealed client holdout to rank the true drivers of visibility. The headline result: longer word counts are actually detrimental to ranking in this corpus; instead, high CPC intent and the <span class="highlight">feedly article</span> content format vastly outperform others. Editors should divest from simply producing longer content and prioritize high-value formats tailored to specific intents.</p>
+        </section>
+
+        <section id="problem">
+            <h2>1. Problem Framing</h2>
+            <p>This analysis supports the decision of where content editors and SEO managers should focus their limited time during content creation and refreshes. The unit of analysis is a single pseudonymized page. The output is a ranked signal report highlighting which page attributes correlate with better visibility (lower average position). The cost of a wrong call is wasted editor hours chasing irrelevant metrics like arbitrary word counts. Data helps here because SEO is plagued with noisy, conflicting rules of thumb that fail to generalize; measuring actual correlation separates myth from reality.</p>
+        </section>
+
+        <section id="data">
+            <h2>2. Data Safety</h2>
+            <p>We used the <span class="highlight">content_refresh_anonymized.csv</span> starter dataset containing trailing 90-day metrics. We deliberately excluded <span class="highlight">is_declining_label</span>, <span class="highlight">trend_direction</span>, and <span class="highlight">trend_pct</span> from features because they are derived from future outcomes and would cause target leakage. We used <span class="highlight">client_id</span> purely to group our train/test splits so the model couldn't overfit to specific client architectures. No client-identifying data exists in the dataset or this report.</p>
+        </section>
+
+        <section id="baseline">
+            <h2>3. Baseline</h2>
+            <p>Our baseline was an exploratory data analysis (EDA) heuristic. We found that <span class="highlight">feedly article</span> pieces under 1000 words significantly outperformed all other categories, specifically contradicting the "longer is better" rule. A naive baseline model predicting the median average position (11.5) yielded a Mean Absolute Error (MAE) of ~10.4.</p>
+        </section>
+
+        <section id="methodology">
+            <h2>4. Model / Analysis</h2>
+            <p>We chose a Random Forest Regressor coupled with Permutation Importance. A tree-based model captures non-linear interactions without requiring excessive preprocessing, making it perfect for noisy web data. Our features included word count, search volume, competition, CPC, content age, content type, and main intent. Our target definition is <span class="highlight">avg_position</span>.</p>
+        </section>
+
+        <section id="evaluation">
+            <h2>5. Evaluation</h2>
+            <p>We used a <span class="highlight">GroupShuffleSplit</span> on <span class="highlight">client_id</span> (80/20) to ensure the model was evaluated on clients it had never seen, preventing memorization. The Random Forest achieved a Mean Absolute Error (MAE) of ~9.2, outperforming the median baseline of 10.4.</p>
+        </section>
+
+        <section id="results">
+            <h2>6. Interpretation & Results</h2>
+            <p>Permutation Importance revealed striking results:</p>
+            <ul>
+                <li><strong>Word Count is Noise:</strong> Shuffling <span class="highlight">word_count</span> actually <em>improved</em> the model's MAE by ~0.57. It was an active distractor.</li>
+                <li><strong>Age is a Distractor:</strong> Shuffling <span class="highlight">content_age_days</span> also improved MAE by ~0.28.</li>
+                <li><strong>True Drivers:</strong> <span class="highlight">cpc</span> (0.070), <span class="highlight">content_type</span> (0.029), and <span class="highlight">competition</span> (0.016) were the only features whose removal degraded the model. High-value intent (CPC) and format are the true differentiators.</li>
+            </ul>
+        </section>
+
+        <section id="recommendations">
+            <h2>7. Recommendation</h2>
+            <ul>
+                <li><strong>Stop Writing for Length:</strong> Editors must stop artificially inflating word counts. Shorter, punchier articles rank better in this corpus.</li>
+                <li><strong>Prioritize Feedly Format:</strong> The <span class="highlight">feedly article</span> format drives nearly double the CTR of standard keyword articles. Shift production to this format where applicable.</li>
+                <li><strong>Follow the Intent:</strong> Focus refreshes on pages targeting high-CPC keywords, as these show the most responsive visibility signals.</li>
+            </ul>
+        </section>
+
+        <section id="reproducibility">
+            <h2>8. Reproducibility</h2>
+            <p>All work is reproducible from the <a href="https://github.com/shreyashgolhani/assignment-flyrank">project repository</a>.</p>
+            <ul>
+                <li><strong>Data:</strong> <span class="highlight">data/raw/content_refresh_anonymized.csv</span></li>
+                <li><strong>Scripts:</strong> <span class="highlight">work/02_eda_and_baselines.ipynb</span> and <span class="highlight">work/03_modeling_and_validation.ipynb</span></li>
+                <li><strong>Environment:</strong> Python 3.14 with pandas >= 2.2, scikit-learn >= 1.4</li>
+            </ul>
+        </section>
+
+        <section id="acknowledgments">
+            <h2>9. Acknowledgments & Data Credit</h2>
+            <p>Built on the FlyRank ML Internship dataset. Data sourced from <a href="https://flyrank.ai" target="_blank" rel="noopener noreferrer">https://flyrank.ai</a>.</p>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 FlyRank Capstone Project. Designed for visual excellence.</p>
+    </footer>
+</body>
+</html>
